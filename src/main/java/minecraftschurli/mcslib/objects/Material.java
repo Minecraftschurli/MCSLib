@@ -12,11 +12,13 @@ import net.minecraft.advancements.criterion.InventoryChangeTrigger;
 import net.minecraft.advancements.criterion.ItemPredicate;
 import net.minecraft.block.Block;
 import net.minecraft.data.*;
+import net.minecraft.data.loot.BlockLootTables;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.util.IItemProvider;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.world.storage.loot.LootTable;
 import net.minecraftforge.fml.RegistryObject;
 import net.minecraftforge.registries.DeferredRegister;
 import org.apache.commons.lang3.tuple.Triple;
@@ -24,7 +26,9 @@ import org.apache.commons.lang3.tuple.Triple;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.function.BiConsumer;
 import java.util.function.Consumer;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 /**
@@ -39,6 +43,7 @@ public class Material {
     private RegistryObject<Block> blockRegistryObject;
     private RegistryObject<Block> oreRegistryObject;
     private Map<String, RegistryObject<Item>> items = new HashMap<>();
+//    private BiConsumer<ResourceLocation, LootTable.Builder> oreLootTable;
 
     public Material(String name) {
         this.name = name;
@@ -80,6 +85,11 @@ public class Material {
         this.itemProperties.put(suffix, properties);
         return this;
     }
+
+    /*public Material withOreLootTable(BiConsumer<ResourceLocation, LootTable.Builder> oreLootTable) {
+        this.oreLootTable = oreLootTable;
+        return this;
+    }*/
     
     public Material register(DeferredRegister<Block> blockDeferredRegister, DeferredRegister<Item> itemDeferredRegister) {
         if (this.block != null) {
@@ -151,5 +161,21 @@ public class Material {
 
     public String name() {
         return this.name;
+    }
+
+    public void registerBlockLootTables(BlockLootTables blockLootTableProvider) {
+        if (this.block != null) {
+            blockLootTableProvider.registerDropSelfLootTable(this.blockRegistryObject.get());
+        }
+        if (this.ore != null) {
+            //noinspection StatementWithEmptyBody
+            if (this.has("gem")) {
+                /*if (this.oreLootTable != null) {
+                    // blockLootTableProvider.registerLootTable(this.oreLootTable);
+                }*/
+            } else {
+                blockLootTableProvider.registerDropSelfLootTable(this.oreRegistryObject.get());
+            }
+        }
     }
 }

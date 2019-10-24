@@ -3,14 +3,20 @@ package minecraftschurli.mcslib.data;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import minecraftschurli.mcslib.MCSLib;
+import net.minecraft.advancements.criterion.EnchantmentPredicate;
+import net.minecraft.advancements.criterion.ItemPredicate;
+import net.minecraft.advancements.criterion.MinMaxBounds;
 import net.minecraft.block.Block;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.DirectoryCache;
 import net.minecraft.data.IDataProvider;
 import net.minecraft.data.LootTableProvider;
 import net.minecraft.data.loot.BlockLootTables;
+import net.minecraft.enchantment.Enchantments;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.storage.loot.*;
+import net.minecraft.world.storage.loot.conditions.ILootCondition;
+import net.minecraft.world.storage.loot.conditions.MatchTool;
 import net.minecraft.world.storage.loot.functions.CopyName;
 import net.minecraft.world.storage.loot.functions.CopyNbt;
 import net.minecraft.world.storage.loot.functions.SetContents;
@@ -26,6 +32,7 @@ import java.util.Map;
  */
 public abstract class BaseLootTableProvider extends BlockLootTables implements IDataProvider {
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create();
+    protected static final ILootCondition.IBuilder HAS_SILK_TOUCH = MatchTool.builder(ItemPredicate.Builder.create().enchantment(new EnchantmentPredicate(Enchantments.SILK_TOUCH, MinMaxBounds.IntBound.atLeast(1))));
 
     protected final Map<Block, LootTable.Builder> lootTables = new HashMap<>();
     private final DataGenerator generator;
