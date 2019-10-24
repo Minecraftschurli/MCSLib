@@ -1,0 +1,22 @@
+modLoader="javafml"
+loaderVersion="[28,)"
+
+[[mods]]
+    modId="mcslib"
+    version="${file.jarVersion}"
+    displayName="MCSLib"
+    authors="Minecraftschurli"
+    description=''''''
+[[dependencies.mcslib]]
+    modId="minecraft"
+    mandatory=true
+    versionRange="[1.14.4]"
+    ordering="NONE"
+    side="BOTH"
+
+[[dependencies.mcslib]]
+    modId="forge"
+    mandatory=true
+    versionRange="[28,)"
+    ordering="NONE"
+    side="BOTH"
